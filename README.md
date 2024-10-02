@@ -1,5 +1,4 @@
-# CS 506 Final Project: 
-# Predicting Cancer Treatment Costs and Evaluating Cost-Effectiveness of Terminal Stage Care
+# CS 506 Final Project: Predicting Cancer Treatment Costs and Evaluating Cost-Effectiveness of Terminal Stage Care
 
 ## Motivation
 The goal is to predict future cancer treatment costs and evaluate whether continuing treatment during terminal stages across various cancer types is financially justifiable.

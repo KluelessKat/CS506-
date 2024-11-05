@@ -4,16 +4,22 @@ import numpy as np
 def load_and_clean_data(file_path):
     """
     Load and clean the cancer care expenditure data.
-    
-    Parameters:
-    file_path (str): Path to the CSV file
-    
-    Returns:
-    pd.DataFrame: Cleaned DataFrame
     """
-    # Read the CSV file
+    # Read the CSV file with the correct separator
     print(f"Loading data from {file_path}...")
-    df = pd.read_csv(file_path)
+    # First read a few lines to inspect the content
+    with open(file_path, 'r') as f:
+        first_lines = [next(f) for _ in range(5)]
+        print("\nFirst few lines of the file:")
+        for line in first_lines:
+            print(line.strip())
+            
+    # Skip the first 3 lines as they are header information
+    df = pd.read_csv(file_path, skiprows=3)
+    
+    print("\nOriginal column names:")
+    for col in df.columns:
+        print(f"'{col}'")
     
     # Rename columns to be more readable
     column_mapping = {
@@ -28,14 +34,24 @@ def load_and_clean_data(file_path):
         'Continuing Phase Cost': 'continuing_cost',
         'Last Year of Life Cost': 'last_year_cost'
     }
+    
+    print("\nAttempting to rename columns...")
     df = df.rename(columns=column_mapping)
     
-    # Clean numeric columns - remove commas and % signs and convert to float
+    print("\nColumn names after rename:")
+    for col in df.columns:
+        print(f"'{col}'")
+    
+    # Clean numeric columns - remove commas and convert to float
     numeric_columns = ['annual_cost_increase', 'total_costs', 'initial_cost', 
                       'continuing_cost', 'last_year_cost']
     
     for col in numeric_columns:
-        df[col] = df[col].astype(str).str.replace('%', '').str.replace(',', '').astype(float)
+        if col in df.columns:
+            # Remove % sign and commas, then convert to float
+            df[col] = df[col].astype(str).str.replace('%', '').str.replace(',', '').astype(float)
+        else:
+            print(f"\nWarning: Column '{col}' not found in DataFrame!")
     
     # Create scenario categories
     scenario_mapping = {

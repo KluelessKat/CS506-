@@ -16,16 +16,6 @@ This data provides a basis for predicting cancer treatment costs under different
 
 ## Exploratory Data Analysis (EDA)
 
-### 1. Total Costs Over Time
-![Unknown-5](https://github.com/user-attachments/assets/0fdf9a8d-2b5e-4363-a199-9caa9c4340c4)
-
-#### Key Observations:
-
-- **Steady Growth**: The data shows a steady increase in costs. This indicates the almost linear growing cost for treatment across various different cancer types.
-- **Projected Expenditures**: This trend suggests that if growth continues at this rate, future costs could become unsustainable without interventions. This observation stresses the importance of developing cost-efficient treatment strategies, especially as the demand for cancer care increases.
-- **Impact of Incidence and Survival Rates**: The cost increases may be partially attributed to rising cancer incidence rates or improved survival rates. Advances in early detection and more effective treatments mean that patients are living longer, requiring ongoing or more frequent treatments, which contribute to the overall rise in costs.
-- **Technological and Treatment Advancements**: Medical advancements, including targeted therapies, immunotherapies, and personalized medicine, often come with high price tags. These new treatment options, while beneficial to patient outcomes, add significantly to the overall expenditure, highlighting a trade-off between clinical efficacy and cost.
-
 ### 2. Average Total Costs by Incidence and Survival Assumptions
 ![Unknown-6](https://github.com/user-attachments/assets/9f1132b1-b71d-433a-9353-5f850ccd4efd)
 

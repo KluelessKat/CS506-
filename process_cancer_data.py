@@ -16,6 +16,10 @@ def load_and_clean_data(file_path):
             
     # Skip the first 3 lines as they are header information
     df = pd.read_csv(file_path, skiprows=3)
+
+    df.drop(columns=['Annual Cost Increase (applied to initial and last phases)'], inplace=True)
+    df.drop_duplicates(inplace=True)
+    df = df[df['Cancer Site'] != "AllSites"]
     
     print("\nOriginal column names:")
     for col in df.columns:
@@ -65,7 +69,8 @@ def load_and_clean_data(file_path):
     # Create binary indicators for assumptions
     df['is_trend_incidence'] = df['scenario'].isin(['trend_incidence', 'trend_both'])
     df['is_trend_survival'] = df['scenario'].isin(['trend_survival', 'trend_both'])
-    
+
+
     return df
 
 def calculate_derived_features(df):

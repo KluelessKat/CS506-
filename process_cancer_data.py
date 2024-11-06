@@ -19,7 +19,6 @@ def load_and_clean_data(file_path):
 
     df.drop(columns=['Annual Cost Increase (applied to initial and last phases)'], inplace=True)
     df.drop_duplicates(inplace=True)
-    df = df[df['Cancer Site'] != "AllSites"]
     
     print("\nOriginal column names:")
     for col in df.columns:

@@ -105,12 +105,12 @@ def prepare_modeling_data(df):
 print("Starting data processing...")
 processed_data = load_and_clean_data('expenditure_for_cancer_care.csv')
 processed_data = calculate_derived_features(processed_data)
-final_data = prepare_modeling_data(processed_data)
 
 # Save the processed data
 output_file = "processed_cancer_care_data.csv"
 print(f"Saving processed data to {output_file}...")
-final_data.to_csv(output_file, index=False)
+processed_data.to_csv(output_file, index=False)
+
 
 print("Processing complete! Check processed_cancer_care_data.csv for the results.")
-print(f"Processed dataset shape: {final_data.shape}")
+print(f"Processed dataset shape: {processed_data.shape}")

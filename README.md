@@ -1,4 +1,6 @@
 # CS 506 Final Project: Predicting Cancer Treatment Costs and Evaluating Cost-Effectiveness of Terminal Stage Care
+Presentation Video: https://youtu.be/B7pZrBvSuH8
+Presentation Slides: https://docs.google.com/presentation/d/1M0ImA_c0VKsuzqxJ6V5ZUTtEOxBbYYa4c3iEpmMoCgw/edit?usp=sharing
 
 ## Motivation
 

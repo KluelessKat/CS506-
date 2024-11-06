@@ -17,7 +17,8 @@ This data provides a basis for predicting cancer treatment costs under different
 ## Exploratory Data Analysis (EDA)
 
 ### 2. Average Total Costs by Incidence and Survival Assumptions
-![Unknown-6](https://github.com/user-attachments/assets/9f1132b1-b71d-433a-9353-5f850ccd4efd)
+![output](https://github.com/user-attachments/assets/9c41d5ed-48f9-4051-b3d6-bb7e2f624d93)
+
 
 The bar chart comparing **Average Total Costs under Various Incidence and Survival Assumptions** highlights how different trends impact total expenditure:
    - **Incidence follows recent trends, Survival constant**
@@ -36,7 +37,9 @@ The bar chart comparing **Average Total Costs under Various Incidence and Surviv
 These observations suggest that managing cancer incidence could be a more impactful strategy for controlling overall costs compared to focusing solely on survival improvements.
 
 ### 3. Variation in Costs per Cancer Site
-![Unknown-7](https://github.com/user-attachments/assets/d8ca74d2-5648-4ac9-9b31-db89267d57ad)
+
+![output3](https://github.com/user-attachments/assets/b2aaea35-46ba-4262-b29a-0973193a9010)
+
 
 The heatmap of **Costs per Cancer Site** offers a detailed view of expenses associated with different cancer types across treatment phases:
    - **Total Costs**
@@ -46,23 +49,23 @@ The heatmap of **Costs per Cancer Site** offers a detailed view of expenses asso
 
 The **Variation in Costs per Cancer Site** heatmap provides several key observations:
 
-  - **Highest Costs for All Sites**: The highest cost incurs for the cases where cancer spreads to all other sites. It is approximately 500x more than the cost of the higest localized cancer. ("Other", i.e., special cases, with $255 Billion).
    - **High Costs for Colorectal and Breast Cancer**: Breast Cancer and lung cancer incur some of the highest total costs across all phases (Initial Year After Diagnosis, Continuing Phase, and Last Year of Life). These types of cancer may have higher incidence rates and longer treatment durations, contributing to their significant cost burden.
    
    - **Breast Cancer and Prostate Cancer Have Substantial Initial and Continuing Phase Costs**: While total costs are lower than for some other cancers, breast and prostate cancer show relatively high costs in both the Initial Year After Diagnosis and Continuing Phase. This likely reflects the extensive, long-term treatment and follow-up care required for these cancers.
    
    - **High Last Year of Life Costs for Lung and Lymphoma Cancer**: Lung and Lymphoma cancers exhibit high costs in the Last Year of Life phase compared to other phases. These cancers may require more intensive and costly palliative care in their terminal stages.
    
-   - **Lower Costs for Melanoma, Uterus, and Stomach Cancer**: These cancer types generally show lower costs across all phases. This may be due to lower incidence rates, shorter treatment durations, or potentially less resource-intensive treatment options.
+   - **Lower Costs for Cervix, Esophagus, and Stomach Cancer**: These cancer types generally show lower costs across all phases. This may be due to lower incidence rates, shorter treatment durations, or potentially less resource-intensive treatment options.
    
-   - **Significant Variation in Cost Distribution by Phase**: Some cancers, like lymphoma and leukemia, have relatively balanced costs across all phases, while others, such as colorectal and lung cancer, show higher costs concentrated in specific phases, particularly the Continuing and Last Year of Life phases.
+   - **Significant Variation in Cost Distribution by Phase**: Some cancers, like brain and ovary, have relatively balanced costs across all phases, while others, such as prostate and lung cancer, show higher costs concentrated in specific phases, particularly the Continuing and Last Year of Life phases.
 
    - **"Other" Cancer Sites Category Shows High Overall Costs**: The "Other" category, which likely aggregates less common cancers, has a high total cost and Continuing Phase Cost. This may reflect the cumulative impact of multiple, diverse cancer types with varying treatment needs.
 
 These observations suggest that cancer treatment costs are highly variable by cancer type and phase, with specific cancers imposing a heavier financial burden, especially in terminal stages. This highlights the importance of targeted cost-management strategies for high-cost cancer types.
 
 ## Decision Tree Analysis
-![Unknown-8](https://github.com/user-attachments/assets/a694e844-d753-4eac-8627-2d5af75936d5)
+![output2](https://github.com/user-attachments/assets/43e1298c-00b8-47ea-bfd8-4a6dbd103a0c)
+
 
 The decision tree model provides insights into the cost-effectiveness of continuing versus stopping treatment based on various cost thresholds. The tree structure reveals several key decision points:
 
@@ -71,17 +74,17 @@ The root node evaluates the **Continuing Phase Cost** with a threshold of 4853.1
 
 ### Left Branch (Continuing Phase Cost ≤ 4853.1)
 - Initial split evaluates **Last Year of Life Cost** at 575.05
-- For costs below 575.05, treatment is uniformly stopped (61 samples)
+- For costs below 575.05, treatment is uniformly stopped (59 samples)
 - For costs above 575.05, a secondary split at 1879.5 further refines the decision:
-  - Moderate costs (575.05-1879.5) show mixed decisions (gini = 0.454)
-  - Higher costs (>1879.5) strongly favor continuing treatment (340 continue vs 5 stop)
+  - Moderate costs (575.05-1879.5) show mixed decisions (gini = 0.453)
+  - Higher costs (>1879.5) strongly favor continuing treatment (330 continue vs 5 stop)
 
 ### Right Branch (Continuing Phase Cost > 4853.1)
 - Evaluates **Initial Year After Diagnosis Cost** at 56269.65
 - High initial costs (>56269.65) uniformly suggest continuing treatment
 - Lower initial costs are further evaluated based on Continuing Phase Cost at 6362.5:
-  - Clear decision to stop treatment for costs above 6362.5 (255 samples)
-  - Mixed decisions for costs between 4853.1 and 6362.5 (74 samples)
+  - Clear decision to stop treatment for costs above 6362.5 (249 samples)
+  - Mixed decisions for costs between 4853.1 and 6362.5 (70 samples)
 
 The tree achieves high predictive confidence in several branches, indicated by gini impurity scores of 0.0 in multiple leaf nodes, suggesting strong decision boundaries for certain cost combinations.
 

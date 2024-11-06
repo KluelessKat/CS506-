@@ -106,10 +106,10 @@ processed_data = load_and_clean_data('expenditure_for_cancer_care.csv')
 processed_data = calculate_derived_features(processed_data)
 
 # Save the processed data
-output_file = "processed_cancer_care_data.csv"
-print(f"Saving processed data to {output_file}...")
-processed_data.to_csv(output_file, index=False)
-
+print(f"Saving processed data...")
+processed_data.to_csv("processed_cancer_care_data.csv", index=False)
+final_data = prepare_modeling_data(processed_data)
+final_data.to_csv("final_cancer_care_data.csv", index=False)
 
 print("Processing complete! Check processed_cancer_care_data.csv for the results.")
 print(f"Processed dataset shape: {processed_data.shape}")

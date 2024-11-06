@@ -21,7 +21,7 @@ This data provides a basis for predicting cancer treatment costs under different
 
 #### Key Observations:
 
-- **Steady Growth**: The data shows a steady increase in costs, with some years exhibiting sharper growth than others. This could indicate that either treatment costs are rising faster in certain years, or that there may have been external factors such as policy changes or shifts in healthcare utilization affecting costs.
+- **Steady Growth**: The data shows a steady increase in costs. This indicates the almost linear growing cost for treatment across various different cancer types.
 - **Projected Expenditures**: This trend suggests that if growth continues at this rate, future costs could become unsustainable without interventions. This observation stresses the importance of developing cost-efficient treatment strategies, especially as the demand for cancer care increases.
 - **Impact of Incidence and Survival Rates**: The cost increases may be partially attributed to rising cancer incidence rates or improved survival rates. Advances in early detection and more effective treatments mean that patients are living longer, requiring ongoing or more frequent treatments, which contribute to the overall rise in costs.
 - **Technological and Treatment Advancements**: Medical advancements, including targeted therapies, immunotherapies, and personalized medicine, often come with high price tags. These new treatment options, while beneficial to patient outcomes, add significantly to the overall expenditure, highlighting a trade-off between clinical efficacy and cost.
@@ -41,7 +41,7 @@ The bar chart comparing **Average Total Costs under Various Incidence and Surviv
 - **Highest Cost in "Incidence Follows Recent Trend, Survival Constant" Scenario**: The scenario where incidence follows recent trends but survival rates remain constant shows the highest average total costs. This may suggest that increasing cancer incidence is a primary driver of rising expenditures, even without improvements in survival.
 - **Lowest Cost in "Survival Follows Recent Trend, Incidence Constant" Scenario**: The scenario with constant incidence but improving survival shows slightly lower average costs. This suggests that advancements in survival may not drastically increase average total costs, possibly due to improved efficiency in treatment over time.
 - **Similar Costs in Combined Trends Scenario**: The scenario where both incidence and survival follow recent trends does not exhibit significantly higher costs than scenarios with only one trend. This could imply that the combined effect of increasing incidence and survival trends does not lead to exponential cost growth, possibly due to the balancing effect of treatments becoming more efficient or widely available.
-Implications for Cost Management: Since costs appear to increase most significantly with rising incidence rather than with improving survival, preventive measures and early interventions could be more effective in managing total costs over time.
+- **Implications for Cost Management**: Since costs appear to increase most significantly with rising incidence rather than with improving survival, preventive measures and early interventions could be more effective in managing total costs over time.
 
 These observations suggest that managing cancer incidence could be a more impactful strategy for controlling overall costs compared to focusing solely on survival improvements.
 
@@ -56,11 +56,12 @@ The heatmap of **Costs per Cancer Site** offers a detailed view of expenses asso
 
 The **Variation in Costs per Cancer Site** heatmap provides several key observations:
 
-   - **High Costs for Colorectal and Lung Cancer**: Colorectal and lung cancer incur some of the highest total costs across all phases (Initial Year After Diagnosis, Continuing Phase, and Last Year of Life). These types of cancer may have higher incidence rates and longer treatment durations, contributing to their significant cost burden.
+  - **Highest Costs for All Sites**: The highest cost incurs for the cases where cancer spreads to all other sites. It is approximately 500x more than the cost of the higest localized cancer. ("Other", i.e., special cases, with $255 Billion).
+   - **High Costs for Colorectal and Breast Cancer**: Breast Cancer and lung cancer incur some of the highest total costs across all phases (Initial Year After Diagnosis, Continuing Phase, and Last Year of Life). These types of cancer may have higher incidence rates and longer treatment durations, contributing to their significant cost burden.
    
    - **Breast Cancer and Prostate Cancer Have Substantial Initial and Continuing Phase Costs**: While total costs are lower than for some other cancers, breast and prostate cancer show relatively high costs in both the Initial Year After Diagnosis and Continuing Phase. This likely reflects the extensive, long-term treatment and follow-up care required for these cancers.
    
-   - **High Last Year of Life Costs for Brain and Esophageal Cancer**: Brain and esophageal cancers exhibit disproportionately high costs in the Last Year of Life phase compared to other phases. These cancers may require more intensive and costly palliative care in their terminal stages.
+   - **High Last Year of Life Costs for Lung and Lymphoma Cancer**: Lung and Lymphoma cancers exhibit high costs in the Last Year of Life phase compared to other phases. These cancers may require more intensive and costly palliative care in their terminal stages.
    
    - **Lower Costs for Melanoma, Uterus, and Stomach Cancer**: These cancer types generally show lower costs across all phases. This may be due to lower incidence rates, shorter treatment durations, or potentially less resource-intensive treatment options.
    

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Data Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .dropdown {
+            margin-bottom: 20px;
+        }
+        .plots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-field label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-field input, .input-field select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .meter-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .toxicity-meter {
+            width: 300px;
+            height: 150px;
+            margin: auto;
+        }
+        .toxicity-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cancer Data Analysis</h1>
+
+        <!-- Exploratory Data Analysis Section -->
+        <div class="section">
+            <h2>Exploratory Data Analysis</h2>
+            <div class="dropdown">
+                <label for="cancer-type">Select Cancer Type:</label>
+                <select id="cancer-type">
+                    {% for cancer_type in cancer_types %}
+                    <option value="{{ cancer_type }}">{{ cancer_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button id="eda-submit">Generate Plots</button>
+            <div class="plots" id="eda-plots"></div>
+        </div>
+
+        <!-- Financial Toxicity Prediction Section -->
+        <div class="section">
+            <h2>Financial Toxicity Prediction</h2>
+            <div class="input-grid">
+                <div class="input-field">
+                    <label for="inp_age">Age:</label>
+                    <input type="number" id="inp_age" min="20" max="80" />
+                </div>
+                <div class="input-field">
+                    <label for="inp_income">Household Income:</label>
+                    <input type="text" id="inp_income" />
+                </div>
+                <div class="input-field">
+                    <label for="inp_race">Race:</label>
+                    <select id="inp_race">
+                        {% for race in races %}
+                        <option value="{{ race }}">{{ race }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_highest_degree">Highest Degree:</label>
+                    <select id="inp_highest_degree">
+                        {% for highest_degree in highest_degrees %}
+                        <option value="{{ highest_degree }}">{{ highest_degree }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_region">Region:</label>
+                    <select id="inp_region">
+                        {% for region in regions %}
+                        <option value="{{ region }}">{{ region }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_gender">Gender:</label>
+                    <select id="inp_gender">
+                        {% for gender in genders %}
+                        <option value="{{ gender }}">{{ gender }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_insurance_type">Insurance Type:</label>
+                    <select id="inp_insurance_type">
+                        {% for insurance_type in insurance_types %}
+                        <option value="{{ insurance_type }}">{{ insurance_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_employment_status">Employment Status:</label>
+                    <select id="inp_employment_status">
+                        {% for employment_status in employment_statuses %}
+                        <option value="{{ employment_status }}">{{ employment_status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="inp_cancer_type">Cancer Type:</label>
+                    <select id="inp_cancer_type">
+                        {% for cancer_type in cancer_types %}
+                        <option value="{{ cancer_type }}">{{ cancer_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button id="predict-button">Predict Toxicity</button>
+            <div class="meter-container">
+                <canvas id="toxicity-meter" class="toxicity-meter"></canvas>
+                <div id="toxicity-value" class="toxicity-value"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // EDA Submit Button
+        document.getElementById('eda-submit').addEventListener('click', () => {
+            const cancerType = document.getElementById('cancer-type').value;
+
+            fetch('/get_eda_plots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cancer_type: cancerType })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const plotsContainer = document.getElementById('eda-plots');
+                plotsContainer.innerHTML = '';
+                for (const [key, fig] of Object.entries(data)) {
+                    const div = document.createElement('div');
+                    div.id = key;
+                    plotsContainer.appendChild(div);
+                    Plotly.newPlot(key, fig.data, fig.layout);
+                }
+            });
+        });
+
+        // Predict Button
+        document.getElementById('predict-button').addEventListener('click', () => {
+          
+            const keys = ["inp_age", "inp_income", "inp_cancer_type", "inp_employment_status", "inp_highest_degree", "inp_insurance_type", "inp_region", "inp_gender", "inp_race"];
+            const values = {};
+
+            keys.forEach(key => {
+                values[key] = document.getElementById(key).value;
+            });
+
+            fetch('/predict_toxicity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const toxicity = data.toxicity;
+                const meterCanvas = document.getElementById('toxicity-meter');
+                const valueDiv = document.getElementById('toxicity-value');
+
+                const ctx = meterCanvas.getContext('2d');
+                const centerX = meterCanvas.width / 2;
+                const centerY = meterCanvas.height;
+                const radius = 100;
+
+                ctx.clearRect(0, 0, meterCanvas.width, meterCanvas.height);
+
+                // Draw arc background
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+                ctx.lineWidth = 20;
+                ctx.strokeStyle = '#ddd';
+                ctx.stroke();
+
+                // Draw arc based on toxicity
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, Math.PI, Math.PI + Math.PI * toxicity);
+                ctx.lineWidth = 20;
+                ctx.strokeStyle = toxicity > 0.7 ? 'red' : toxicity > 0.4 ? 'yellow' : 'green';
+                ctx.stroke();
+
+                // Draw meter hand
+                const angle = Math.PI + Math.PI * toxicity;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle));
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+
+                valueDiv.textContent = `${(toxicity * 100).toFixed(2)}%`;
+            });
+        });
+    </script>
+</body>
+</html>

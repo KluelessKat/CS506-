@@ -3,18 +3,19 @@ import plotly.graph_objs as go
 from plotly.utils import PlotlyJSONEncoder
 import numpy as np
 import json
+from generate_plotting_data import generate_plotting_data, cancer_name_map, highest_degrees
+
 
 app = Flask(__name__)
 
 # Dummy data
 features = {
-    "cancer_types": ["Lung", "Breast", "Colon"],
+    "cancer_types": list(cancer_name_map.keys()),
     "insurance_types": ["Medicare", "Medicaid", "Private"],
     "regions": ["Northeast", "South", "Midwest", "West"],
     "employment_statuses": ["Employed", "Unemployed"],
-    "highest_degrees": ["High School", "Bachelor's", "Master's", "Doctorate"],
+    "highest_degrees": highest_degrees, # index + 1 is the code
     "family_sizes": list(range(1, 8)),
-    "ages": list(range(20, 81)),
     "genders": ["male", "female"],
     "income_levels": ["<30k", "30k-60k", "60k-100k", "100k+"],
     "races": ["white", "black", "asian", "other"],
@@ -39,32 +40,36 @@ def index():
 def get_eda_plots():
     cancer_type = request.json["cancer_type"]
 
+
+    generated_data = generate_plotting_data("data/processed/results.csv", cancer_type)
+
+
     # Generate dummy plots for all EDA types
     figures = {}
 
     # Coverage vs Race
     figures["race"] = go.Figure(
-        features=[
-            go.Bar(name=race, x=features["insurance_types"], y=features["dummy_amounts"])
-            for race in features["races"]
+        data=[
+            go.Bar(name=race_name, x=list(data.keys()), y=list(data.values()))
+            for race_name, data in generated_data["race"].items()
         ]
     )
     figures["race"].update_layout(title="Coverage vs Race", barmode="group")
 
     # Coverage vs Region
     figures["region"] = go.Figure(
-        features=[
-            go.Bar(name=region, x=features["insurance_types"], y=features["dummy_amounts"])
-            for region in features["regions"]
+        data=[
+            go.Bar(name=region_name, x=list(data.keys()), y=list(data.values()))
+            for region_name, data in generated_data["region"].items()
         ]
     )
     figures["region"].update_layout(title="Coverage vs Region", barmode="group")
 
     # Coverage vs Employment Status
     figures["employment_status"] = go.Figure(
-        features=[
-            go.Bar(name=status, x=features["insurance_types"], y=features["dummy_amounts"])
-            for status in features["employment_statuses"]
+        data=[
+            go.Bar(name=status_name, x=list(data.keys()), y=list(data.values()))
+            for status_name, data in generated_data["employment_statuses"].items()
         ]
     )
     figures["employment_status"].update_layout(
@@ -73,27 +78,27 @@ def get_eda_plots():
 
     # Amount vs Highest Degree Obtained
     figures["degree"] = go.Figure(
-        features=[go.Bar(x=features["highest_degrees"], y=features["dummy_amounts"])]
+        data=[go.Bar(x=generated_data["highest_degree"]["highest_degree"], y=generated_data["highest_degree"]['insurance_cover'])]
     )
     figures["degree"].update_layout(title="Amount vs Highest Degree Obtained")
 
     # Amount vs Family Size
     figures["family_size"] = go.Figure(
-        features=[go.Histogram(x=features["family_sizes"], y=features["dummy_amounts"])]
+        data=[go.Bar(x=generated_data["family_size"]['family_size'], y=generated_data["family_size"]['amount'])]
     )
     figures["family_size"].update_layout(title="Amount vs Family Size")
 
     # Amount vs Age
     figures["age"] = go.Figure(
-        features=[go.Histogram(x=features["ages"], y=features["dummy_amounts"])]
+        data=[go.Bar(x=generated_data['age']['age'], y=generated_data['age']['insurance_cover'])]
     )
     figures["age"].update_layout(title="Amount vs Age")
 
     # Total Out-of-Pocket vs Income
     figures["income"] = go.Figure(
-        features=[
+        data=[
             go.Scatter(
-                x=features["income_levels"], y=features["dummy_amounts"], mode="lines+markers"
+                x=list(generated_data["family_income"].keys()), y=list(generated_data['family_income'].values()), mode="lines+markers"
             )
         ]
     )

@@ -74,6 +74,7 @@ def process_data(data_root="./"):
         "CANCERDX": "cancer_dx",
         "HOUR53": "hours_worked",
         "EMPST53": "employment_status",
+        "FAMS1231": "family_size",
         "HIDEG": "highest_degree",
         "SEX": "sex",
         "AGELAST": "age",

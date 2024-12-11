@@ -27,6 +27,30 @@ race_mapping = {
     6: 'multiple_races_reported'
 }
 
+region_map = {
+  1: 'Northeast',
+  2: 'Midwest',
+  3: 'South',
+  4: 'West'
+}
+
+gender_map = {
+    1: 'male',
+    2: 'female'
+}
+
+def reverse_map(input_dict):
+    """
+    Reverses the keys and values of a given dictionary.
+
+    Parameters:
+    input_dict (dict): The dictionary to reverse.
+
+    Returns:
+    dict: A new dictionary with the keys and values swapped.
+    """
+    return {v: k for k, v in input_dict.items()}
+
 
 def generate_plotting_data(dataset_path, cancer_type):
     """
@@ -115,12 +139,6 @@ def generate_plotting_data(dataset_path, cancer_type):
     result = df.groupby(['race_name', 'insurance_type'])['insurance_cover'].mean().unstack(fill_value=0)
     plt_data['race'] = result.to_dict(orient='index')
 
-    region_map = {
-      1: 'Northeast',
-      2: 'Midwest',
-      3: 'South',
-      4: 'West'
-    }
 
     df2 = df[df['region'] > 0]
     df2['region_name'] = df2['region'].map(region_map)

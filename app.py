@@ -3,23 +3,55 @@ import plotly.graph_objs as go
 from plotly.utils import PlotlyJSONEncoder
 import numpy as np
 import json
-from generate_plotting_data import generate_plotting_data, cancer_name_map, highest_degrees
-
+from generate_plotting_data import generate_plotting_data, cancer_name_map, highest_degrees, race_mapping, region_map, gender_map, reverse_map
+import pickle
+import pandas as pd
 
 app = Flask(__name__)
 
 # Dummy data
 features = {
     "cancer_types": list(cancer_name_map.keys()),
-    "insurance_types": ["Medicare", "Medicaid", "Private"],
-    "regions": ["Northeast", "South", "Midwest", "West"],
-    "employment_statuses": ["Employed", "Unemployed"],
+    "insurance_types": ['uninsured', 'private', 'medicaid', 'medicare', 'other_public', 'tricare', 'hmo_public', 'other_paid'],
+    "regions": list(region_map.values()),
+    "employment_statuses": ["employed", "unemployed", "other"],
     "highest_degrees": highest_degrees, # index + 1 is the code
     "family_sizes": list(range(1, 8)),
-    "genders": ["male", "female"],
+    "genders": list(gender_map.values()),
     "income_levels": ["<30k", "30k-60k", "60k-100k", "100k+"],
-    "races": ["white", "black", "asian", "other"],
+    "races": race_mapping.values(),
 }
+
+model = None
+scaler_model = None
+cancer_label_encoder = insurance_label_encoder = None
+
+def load_model(path_root='saved_model/'):
+  global model, scaler_model, cancer_label_encoder, insurance_label_encoder
+
+  with open(path_root + "best_model.pkl", "rb") as f:
+    model = pickle.load(f)
+    print("loaded trained model")
+  with open(path_root + 'scaler_model.pickle', "rb") as f:
+    scaler_model = pickle.load(f)
+
+  with open(path_root + "cancer_label_encoder.pkl", "rb") as f:
+    cancer_label_encoder = pickle.load(f)
+
+  with open(path_root + "insurance_label_encoder.pkl", "rb") as f:
+    insurance_label_encoder = pickle.load(f)
+
+  
+
+reverse_gender_map = reverse_race_map = reverse_highest_degree_map = reverse_region_map = reverse_employment_status = None
+
+def build_reverse_maps():
+  global reverse_gender_map, reverse_race_map, reverse_highest_degree_map, reverse_region_map, reverse_cancer_map, reverse_employment_status
+  reverse_gender_map = reverse_map(gender_map)
+  reverse_race_map = reverse_map(race_mapping)
+  reverse_highest_degree_map = {deg: i for i, deg in enumerate(highest_degrees, 1)}
+  reverse_region_map = reverse_map(region_map)
+  reverse_employment_status = {"employed": 3, "unemployed": 0, "other": -1}
 
 
 @app.route("/")
@@ -115,10 +147,29 @@ def get_eda_plots():
 @app.route("/predict_toxicity", methods=["POST"])
 def predict_toxicity():
     user_input = request.json
-    print(user_input)
-    toxicity_fraction = np.random.uniform(0, 1)  # Replace with actual prediction logic
-    return jsonify({"toxicity": toxicity_fraction})
+    df = pd.DataFrame(columns=['insurance_type', 'race', 'cancer_dx', 'employment_status', 'highest_degree', 'sex', 'age', 'cancer_type', 'region'])
+    new_row = {
+        'insurance_type': float(insurance_label_encoder.transform([user_input['inp_insurance_type']])),
+        'race': float(reverse_race_map[user_input['inp_race']]),
+        'cancer_dx': 1.0,
+        'employment_status': float(reverse_employment_status[user_input['inp_employment_status']]),
+        'highest_degree': float(reverse_highest_degree_map[user_input['inp_highest_degree']]),
+        'sex': float(reverse_gender_map[user_input['inp_gender']]),
+        'age': float(scaler_model.transform([[user_input['inp_age']]])),
+        'cancer_type': float(cancer_label_encoder.transform([cancer_name_map[user_input['inp_cancer_type']]])),
+        'region': float(reverse_region_map[user_input['inp_region']]),
+    }
 
+    df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+    out_of_pocket = model.predict(df)
+    toxicity_fraction = out_of_pocket / int(user_input['inp_income'])  # Replace with actual prediction logic
+    return jsonify({"toxicity": float(toxicity_fraction)})
+
+
+with app.app_context():
+  build_reverse_maps()
+  load_model()
 
 if __name__ == "__main__":
     app.run(debug=True)

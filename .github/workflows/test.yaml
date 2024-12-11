@@ -29,5 +29,5 @@ jobs:
 
     - name: Test server response
       run: |
-        curl -f http://127.0.0.1:5000 || exit 1
+        curl -f http://127.0.0.1:3000 || exit 1
 
